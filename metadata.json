@@ -1,0 +1,6 @@
+{
+  "name": "BLE Device Tracker",
+  "description": "A modern crypto-styled PWA for discovering nearby Bluetooth devices, assigning groups, capturing phone GPS coordinates, and syncing device registries.",
+  "requestFramePermissions": ["geolocation"],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
