@@ -1,20 +1,13 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://ai.google.dev/static/site-assets/images/share-ais-513315318.png" />
-</div>
+# a Bluetooth PWA scanner for detecting devices around you
 
-# Run and deploy your AI Studio app
+Thi app will be used to detect bluetooth devices around you.
+One detected, with optional name filled by device name, you can save fields
+- name (editable)
+- latitude and longitude (from phone GPS)
+- group zone (list of zones)
 
-This contains everything you need to run your app locally.
-
-View your app in AI Studio: https://ai.studio/apps/fa2cab2e-93f7-4349-9279-bff2f7e3ba4b
+By pressing the button this info will be saved (temporary mocked with a dialog with all data)
 
 ## Run Locally
 
-**Prerequisites:**  Node.js
-
-
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+It use VueJs, PWA bluetooth API to detect devices around you
