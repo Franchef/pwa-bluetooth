@@ -235,7 +235,12 @@ const closestDevice = computed(() => {
 
       <!-- Footer tip / status -->
       <div class="text-center text-[11px] text-slate-400 font-mono">
-        {{ devices.length }} BLE nodes detected in vicinity. Click any beacon blip or select from the list below.
+        <span v-if="devices.length > 0">
+          {{ devices.length }} BLE node{{ devices.length === 1 ? '' : 's' }} detected in vicinity. Click any blip or select from the list below.
+        </span>
+        <span v-else class="text-cyan-400/80">
+          Radar active. Click "Web BLE Scan" to discover real nearby Bluetooth peripherals.
+        </span>
       </div>
 
     </div>

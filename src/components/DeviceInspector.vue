@@ -11,7 +11,8 @@ import {
   Radio, 
   Cpu, 
   ExternalLink,
-  CheckCircle2
+  CheckCircle2,
+  Trash2
 } from 'lucide-vue-next';
 
 const props = defineProps<{
@@ -38,6 +39,7 @@ const emit = defineEmits<{
     }
   ): void;
   (e: 'view-api-payload', payload: ApiPostPayload): void;
+  (e: 'remove-device', deviceId: string): void;
 }>();
 
 const nameInput = ref('');
@@ -385,13 +387,13 @@ const handleSaveApi = async () => {
           </div>
 
           <div v-if="coordinates.error" class="text-[11px] text-amber-400/90 bg-amber-500/10 p-2 rounded-lg border border-amber-500/20">
-            {{ coordinates.error }} (Using device precision mock)
+            {{ coordinates.error }} (Using fallback coordinates)
           </div>
         </div>
       </div>
 
-      <!-- SECTION 5: BUTTON (MOCK TO POST API) SAVE -->
-      <div class="pt-2">
+      <!-- SECTION 5: BUTTON SAVE TO CLOUD REGISTRY -->
+      <div class="pt-2 space-y-2">
         <button
           id="btn-save-device-api"
           type="button"
@@ -414,12 +416,21 @@ const handleSaveApi = async () => {
           </template>
           <template v-else>
             <Send class="w-4 h-4" />
-            <span>Save & Post to API</span>
+            <span>Save & Register Device</span>
           </template>
         </button>
 
-        <p class="text-[11px] text-center text-slate-500 mt-2 font-mono">
-          Encodes BLE MAC, custom name, group, and phone GPS coordinates into JSON and posts to simulated endpoint.
+        <button
+          type="button"
+          @click="$emit('remove-device', device.id)"
+          class="w-full py-2 px-3 rounded-xl border border-slate-800 hover:border-rose-500/30 text-slate-500 hover:text-rose-400 hover:bg-rose-500/5 text-xs font-medium flex items-center justify-center gap-1.5 transition cursor-pointer"
+        >
+          <Trash2 class="w-3.5 h-3.5" />
+          <span>Remove From Scanner</span>
+        </button>
+
+        <p class="text-[11px] text-center text-slate-500 mt-1 font-mono">
+          Registers BLE MAC, custom name, group, and phone GPS coordinates into local vault and API.
         </p>
       </div>
 

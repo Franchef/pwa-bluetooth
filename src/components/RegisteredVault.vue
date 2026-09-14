@@ -66,7 +66,7 @@ const handleDownloadJson = () => {
           </h3>
         </div>
         <p class="text-xs text-slate-400 mt-0.5">
-          Persisted in local storage and synced with mock cloud API endpoints.
+          Persisted in local storage and synced with device registry API endpoints.
         </p>
       </div>
 

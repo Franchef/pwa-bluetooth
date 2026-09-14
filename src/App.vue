@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { useBluetoothScanner } from './composables/useBluetoothScanner';
 import { useGeolocation } from './composables/useGeolocation';
-import { DEVICE_GROUPS } from './data/mockDevices';
+import { DEVICE_GROUPS } from './data/deviceGroups';
 import { ApiPostPayload } from './types';
 
 import Navbar from './components/Navbar.vue';
@@ -37,7 +37,8 @@ const {
   updateDeviceName,
   updateDeviceGroup,
   registerDevice,
-  resetDevices,
+  removeDevice,
+  clearAllDevices,
 } = useBluetoothScanner();
 
 // Geolocation composable
@@ -88,15 +89,24 @@ const handleRegisterDevice = (
   showToast(`✓ Device registered with GPS lock [${location.latitude.toFixed(4)}, ${location.longitude.toFixed(4)}]!`);
 };
 
+const handleRemoveDevice = (deviceId: string) => {
+  removeDevice(deviceId);
+  showToast('Device removed from scanner.');
+};
+
 const handleViewApiPayload = (payload: ApiPostPayload) => {
   apiPayload.value = payload;
 };
 
-const handleResetAll = () => {
-  if (confirm('Reset Bluetooth devices to initial mock telemetry state?')) {
-    resetDevices();
-    showToast('Reset simulator to initial beacons');
+const handleClearAll = () => {
+  if (confirm('Clear all discovered Bluetooth devices from your local registry?')) {
+    clearAllDevices();
+    showToast('Device registry cleared.');
   }
+};
+
+const openInNewTab = () => {
+  window.open(window.location.href, '_blank');
 };
 </script>
 
@@ -121,17 +131,27 @@ const handleResetAll = () => {
       id="hardware-error-banner"
       class="bg-amber-500/10 border-b border-amber-500/20 text-amber-200 text-xs px-4 py-2.5 flex items-center justify-between"
     >
-      <div class="max-w-7xl mx-auto w-full flex items-center justify-between gap-3">
+      <div class="max-w-7xl mx-auto w-full flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div class="flex items-center gap-2">
           <AlertCircle class="w-4 h-4 text-amber-400 shrink-0" />
           <span>{{ hardwareError }}</span>
         </div>
-        <button
-          @click="clearHardwareError"
-          class="p-1 text-amber-400 hover:text-white rounded transition cursor-pointer"
-        >
-          <X class="w-4 h-4" />
-        </button>
+        <div class="flex items-center gap-3 shrink-0 self-end sm:self-auto">
+          <button
+            v-if="hardwareError.includes('iframe') || hardwareError.includes('preview') || hardwareError.includes('tab')"
+            @click="openInNewTab"
+            class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 font-semibold transition cursor-pointer"
+          >
+            <span>Open in New Tab</span>
+            <ExternalLink class="w-3.5 h-3.5" />
+          </button>
+          <button
+            @click="clearHardwareError"
+            class="p-1 text-amber-400 hover:text-white rounded transition cursor-pointer"
+          >
+            <X class="w-4 h-4" />
+          </button>
+        </div>
       </div>
     </div>
 
@@ -172,6 +192,7 @@ const handleResetAll = () => {
               :selected-device-id="selectedDeviceId"
               :groups="DEVICE_GROUPS"
               @select-device="handleSelectDevice"
+              @scan-hardware="scanHardwareBluetooth"
             />
           </div>
 
@@ -185,6 +206,7 @@ const handleResetAll = () => {
               @update-name="handleUpdateName"
               @update-group="handleUpdateGroup"
               @register-device="handleRegisterDevice"
+              @remove-device="handleRemoveDevice"
               @view-api-payload="handleViewApiPayload"
             />
           </div>
@@ -219,12 +241,12 @@ const handleResetAll = () => {
         <div class="flex items-center gap-4">
           <button
             id="btn-reset-simulator"
-            @click="handleResetAll"
+            @click="handleClearAll"
             class="flex items-center gap-1.5 text-slate-400 hover:text-slate-200 transition cursor-pointer"
-            title="Reset to default mock beacons"
+            title="Clear all stored devices"
           >
             <RotateCcw class="w-3.5 h-3.5" />
-            <span>Reset Beacons</span>
+            <span>Clear Registry</span>
           </button>
 
           <span class="hidden sm:inline text-slate-700">|</span>

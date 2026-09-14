@@ -2,7 +2,7 @@
 import { ref, computed } from 'vue';
 import { BLEDevice, DeviceGroup } from '../types';
 import DeviceCard from './DeviceCard.vue';
-import { Search, SlidersHorizontal } from 'lucide-vue-next';
+import { Search, SlidersHorizontal, Bluetooth, Cpu } from 'lucide-vue-next';
 
 const props = defineProps<{
   devices: BLEDevice[];
@@ -12,6 +12,7 @@ const props = defineProps<{
 
 defineEmits<{
   (e: 'select-device', id: string): void;
+  (e: 'scan-hardware'): void;
 }>();
 
 const searchQuery = ref('');
@@ -134,7 +135,24 @@ const filteredDevices = computed(() => {
     </div>
 
     <!-- Cards List -->
-    <div v-if="filteredDevices.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
+    <div v-if="devices.length === 0" class="p-8 sm:p-10 text-center rounded-2xl bg-slate-900/60 border border-slate-800 text-slate-400">
+      <div class="w-12 h-12 rounded-2xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 mx-auto flex items-center justify-center mb-3">
+        <Bluetooth class="w-6 h-6 animate-pulse" />
+      </div>
+      <h3 class="text-sm font-semibold text-white">No Bluetooth Devices in Registry</h3>
+      <p class="text-xs text-slate-400 mt-1 max-w-md mx-auto leading-relaxed">
+        Scan for real Bluetooth Low Energy peripherals in your room using the browser Web Bluetooth API. Supported on Chrome, Edge, and Android.
+      </p>
+      <button
+        type="button"
+        @click="$emit('scan-hardware')"
+        class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold text-xs transition cursor-pointer shadow-lg shadow-cyan-500/20"
+      >
+        <Cpu class="w-4 h-4" />
+        <span>Scan for Real BLE Devices</span>
+      </button>
+    </div>
+    <div v-else-if="filteredDevices.length > 0" class="grid grid-cols-1 md:grid-cols-2 gap-2.5">
       <DeviceCard
         v-for="device in filteredDevices"
         :key="device.id"
