@@ -5,8 +5,10 @@ import {defineConfig} from 'vite';
 import {VitePWA} from 'vite-plugin-pwa';
 
 export default defineConfig(() => {
+  const basePath = process.env.BASE_PATH || (process.env.GITHUB_ACTIONS ? '/pwa-bluetooth/' : './');
+
   return {
-    base: './',
+    base: basePath,
     plugins: [
       vue(),
       tailwindcss(),
@@ -14,15 +16,15 @@ export default defineConfig(() => {
         registerType: 'autoUpdate',
         includeAssets: ['icon.svg', 'apple-touch-icon.png', 'pwa-192x192.png', 'pwa-512x512.png'],
         manifest: {
-          id: './',
+          id: basePath,
           name: 'BLE Device Tracker',
           short_name: 'BLETracker',
           description: 'A modern crypto-styled PWA for discovering nearby Bluetooth devices, assigning groups, capturing phone GPS coordinates, and syncing device registries.',
           theme_color: '#090D16',
           background_color: '#090D16',
           display: 'standalone',
-          start_url: './',
-          scope: './',
+          start_url: basePath,
+          scope: basePath,
           icons: [
             {
               src: 'pwa-192x192.png',

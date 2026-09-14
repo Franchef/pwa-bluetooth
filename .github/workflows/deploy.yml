@@ -39,6 +39,8 @@ jobs:
           fi
 
       - name: Build application
+        env:
+          BASE_PATH: '/pwa-bluetooth/'
         run: npm run build
 
       - name: Upload GitHub Pages artifact
